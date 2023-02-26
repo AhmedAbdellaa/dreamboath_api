@@ -1,0 +1,58 @@
+{%extends 'stamp/home_template.html'%}
+{%block title%}log Table{%endblock%}
+{%block main%}
+<table id="data" class="table table-striped" style="width:100%;">
+  <thead class="bg-light">
+    <tr>
+      <th>enqueued_at</th>
+      <th>usr</th>
+      <th>method</th>
+      <th>ID</th>
+      <th>Status</th>
+      <th>started_at</th>
+      <th>ended_at</th>
+      <th>cancel</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for row in log_table%}
+    <td>{{row[2]}}</td>
+    <td>{{row[5]}}</td>
+    <td>{{row[6]}}</td>
+    <td>{{row[0]}}</td>
+    <td>{{row[1]}}</td>
+    <td>{{row[3]}}</td>
+    <td>{{row[4]}}</td>
+    
+    <td><button class="btn btn-primary" name="{{row[0]}}" onclick="cancel">cancel</button></td>
+
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>
+{% block scripts %}
+<script>
+  $(document).ready(function () {
+    $('#data').DataTable({
+      /* SCROLLING */
+      scrollY: "70%",
+      scrollCollapse: true,
+      paging: true,
+      scrollX: true,
+      info: true,
+      dom: 'Bfrtip',
+      // select: true,
+
+      // to limit records
+      pageLength: Math.floor((screen.availHeight * 0.34) / 25),
+
+    });
+  });
+
+  $(".btn").click(function () {
+    var name = $(this).attr('name')
+    window.location='/cancel'+'?id='+name
+  })
+</script>
+{% endblock %}
+{%endblock%}

@@ -4,6 +4,7 @@ from app.face_crop import image_croping
 from flask import  request,jsonify,make_response ,render_template ,redirect
 from werkzeug.utils import secure_filename
 import time
+import datetime
 import itertools
 import os 
 import secrets
@@ -66,9 +67,9 @@ def yamlmodel():
         
         # ["face","half","close","full"]
         cut_type = None#"face"
-        if 'cut-type' in args :
-            if args['cut-type'] in ["face","half","close","full"] :
-                cut_type = args['cut-type']
+        if 'cut_type' in args :
+            if args['cut_type'] in ["face","half","close","full"] :
+                cut_type = args['cut_type']
 
         resolution = 512
         if 'resolution' in  args :
@@ -135,12 +136,13 @@ def yamlmodel():
 
         # os.mkdir(os.path.join(app.config["UPLOAD"],folder_name))
         os.mkdir(os.path.join(app.config["UPLOAD"],folder_name +'input'))
-
+        print("******************************")
+        print(cut_type)
         images_number =image_croping(images,
                     os.path.join(app.config["UPLOAD"],folder_name+'input'),cut_on=cut_type)
         shutil.rmtree(os.path.join(app.config["UPLOAD"],folder_name), ignore_errors=True)
 
-        model_path = 'custom'+'-_-'+str(usr)+'-_-'+secrets.token_urlsafe(6)+'-_-'+secure_filename(model_name)+'-_-'+str(max_train_steps)
+        model_path = 'custom'+'-_-'+str(usr)+'-_-'+str(datetime.datetime.now().strftime("%Y-%M-%d_%H-%M-%S"))+'-_-'+secrets.token_urlsafe(6)+'-_-'+secure_filename(model_name)+'-_-'+str(max_train_steps)
         output_dir =  os.path.join(app.config['MODELS'],model_path)
         weights_dir_path = os.path.join(output_dir,str(max_train_steps))
         
@@ -170,7 +172,7 @@ def yamlmodel():
             if len(JOBSIDS)>500 :
                 JOBSIDS [len(JOBSIDS)-500:]
 
-            return make_response(jsonify({'status':True,"discription":f"job enterd to the queue with total images {images_number}",
+            return make_response(jsonify({'status':"Success","discription":f"job enterd to the queue with total images {images_number}",
             "weights_dir_path":model_path}))
         else :
 
@@ -178,7 +180,7 @@ def yamlmodel():
     
     return make_response(jsonify({'status':"failed",'discription':'Method Not Allowed'}),405)
 
-@app.route("/jobs_api",methods=['GET'])
+@app.route("/jobs-api",methods=['GET'])
 def jobs_api():
     if request.method == "GET" :
         args = request.args 
@@ -194,8 +196,8 @@ def jobs_api():
                 batch=int (args['batch'])
             except:
                 return make_response(jsonify({'status':"failed",'discription':'enter valid batch'}),400)    
-        else:
-            return make_response(jsonify({'status':"failed",'discription':'no user'}),400)
+        # else:
+        #     return make_response(jsonify({'status':"failed",'discription':'no user'}),400)
         ########################################################################
         jobs = {}   
         counter = 0
@@ -228,7 +230,7 @@ def jobs_api():
         return make_response(jsonify({'message':"failed",'discription':'Method Not Allowed'}),405)
     
 
-@app.route('/cancel_job',methods=['POST'])
+@app.route('/cancel-job',methods=['POST'])
 def cancel_job ():
     if request.method == "POST" :
         print("**************************************")
@@ -262,12 +264,12 @@ def cancel_job ():
                                     job.cancel()
                                     
                                 except:
-                                    return  make_response(jsonify({'message':"failed",'discription':'faild to cancel the job'}),405)
+                                    return  make_response(jsonify({'message':"failed",'discription':'faild to cancel the job'}),400)
                             else :
                                 try:
                                     send_stop_job_command(r, job_id)
                                 except:
-                                    return make_response(jsonify({'message':"failed",'discription':'job not found'}),405)
+                                    return make_response(jsonify({'message':"failed",'discription':'job not found'}),400)
 
                             return make_response(jsonify({'message':"Success"}),200)
                         

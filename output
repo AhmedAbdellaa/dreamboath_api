@@ -1,0 +1,42 @@
+http://192.168.1.9:5050/jobs_api?usr=ahmed&batch=10
+
+{
+    "jobs": {
+        "job_1": {
+            "enqueued_at": "02/26/2023 01:13:27",
+            "model_id": "custom-_-ahmed-_-DGej3UC2-_-runwayml_stable-diffusion-v1-5-_-800",
+            "started_at": "02/26/2023 01:13:27",
+            "status": "stopped"
+        },
+        "job_2": {
+            "ended_at": "02/26/2023 01:21:33",
+            "enqueued_at": "02/26/2023 01:13:35",
+            "model_id": "custom-_-ahmed-_-OLbVvH-2-_-runwayml_stable-diffusion-v1-5-_-800",
+            "started_at": "02/26/2023 01:14:01",
+            "status": "finished"
+        },
+        "job_3": {
+            "enqueued_at": "02/26/2023 01:13:37",
+            "model_id": "custom-_-ahmed-_-eaS3AqLl-_-runwayml_stable-diffusion-v1-5-_-800",
+            "status": "canceled"
+        }
+    },
+    "message": "success"
+}
+--------------------------------------------------------
+http://192.168.1.9:5050/cancel_job
+
+{
+    "usr":"ahmed",
+    "model_name":"custom-_-ahmed-_-eaS3AqLl-_-runwayml_stable-diffusion-v1-5-_-800"
+}
+
+{"message":"Success"}
+----------------------------------------------------------
+http://192.168.1.9:5050/runwayml
+
+{
+    "discription": "job enterd to the queue with total images 40",
+    "status": "Success",
+    "weights_dir_path": "custom-_-ahmed-_-eaS3AqLl-_-runwayml_stable-diffusion-v1-5-_-800"
+}

@@ -1,0 +1,1 @@
+scp -i ~/.ssh/id_ed25519 -P 19044 ./teset.txt  root@213.173.99.40:/home/

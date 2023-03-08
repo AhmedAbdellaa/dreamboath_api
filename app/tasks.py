@@ -61,7 +61,8 @@ def acc_model(model_name,output_dir,vae_name,resolution,learning_rate,lr_schedul
     if fp16:
         half_arg = "--half"
     os.system(f'python ./app/convert_diffusers_to_original_stable_diffusion.py --model_path="{weights_dir_path}"  --checkpoint_path="{ckpt_path}" {half_arg}')
-    shutil.copy(ckpt_path,app.config['MODELS'])
+    os.system(f"scp -i ~/.ssh/id_ed25519 -P 19044 {ckpt_path}  root@213.173.99.40:/home/stable-diffusion-webui/models/Stable-diffusion/")
+    # shutil.copy(ckpt_path,app.config['MODELS'])
     shutil.rmtree(output_dir, ignore_errors=True)
     re_api = requests.post('https://api.iqstars.me/In2Niaga/Notification.aspx',json={"DeviceID":push_id})
     if re_api.json() and re_api.json()['message'] :
